@@ -302,6 +302,7 @@ use vars qw(@EXPORT_OK @ISA %EXPORT_TAGS);
 sub run_clauses ($$$\@) {
     my($clauses,$err,$wantarray,$result) = @_;
     my $code = undef;
+    local $Error::THROWN = undef;
 
     $err = $Error::ObjectifyCallback->({'text' =>$err}) unless ref($err);
 
@@ -634,11 +635,11 @@ Error - Error/exception handling in an OO-ish way
     }
     catch Error::IO with {
 	my $E = shift;
-	print STDERR "File ", $E->{'-file'}, " had a problem\n";
+	print STDERR "File ", $E->{'\-file'}, " had a problem\n";
     }
     except {
 	my $E = shift;
-	my $general_handler=sub {send_message $E->{-description}};
+	my $general_handler=sub {send_message $E->{\-description}};
 	return {
 	    UserException1 => $general_handler,
 	    UserException2 => $general_handler
@@ -735,11 +736,11 @@ with the arguments that are passed to it's constructor. The elements
 that are used by, or are retrievable by the C<Error> class are listed
 below, other classes may add to these.
 
-	-file
-	-line
-	-text
-	-value
-	-object
+	\-file
+	\-line
+	\-text
+	\-value
+	\-object
 
 If C<-file> or C<-line> are not specified in the constructor arguments
 then these will be initialized with the file name and line number where
